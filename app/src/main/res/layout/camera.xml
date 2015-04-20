@@ -16,7 +16,8 @@
 		android:layout_alignParentRight="true"
 		android:layout_marginBottom="16dip"
 		android:layout_marginRight="16dip"
-		android:text="Hi!">
+		android:text="Hi!"
+        android:id="@+id/takePictureButton">
 	</Button>
 
 </RelativeLayout>

@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -53,15 +54,15 @@ public class DisplayCameraFragment extends CameraFragment implements
     private boolean singleShotProcessing=false;
     private long lastFaceToast=0L;
     String flashMode=null;
-
+    public static DisplayCameraFragment displayCamera;
     static DisplayCameraFragment newInstance(boolean useFFC) {
-        DisplayCameraFragment f=new DisplayCameraFragment();
+        displayCamera =new DisplayCameraFragment();
         Bundle args=new Bundle();
 
         args.putBoolean(KEY_USE_FFC, useFFC);
-        f.setArguments(args);
+        displayCamera.setArguments(args);
 
-        return(f);
+        return(displayCamera);
     }
 
     @Override
@@ -86,6 +87,18 @@ public class DisplayCameraFragment extends CameraFragment implements
 
         ((ViewGroup)results.findViewById(R.id.camera)).addView(cameraView);
 
+
+        Button takePictureBut = (Button)results.findViewById(R.id.takePictureButton);
+
+        takePictureBut.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                takePicture();
+                displayCamera.mirrorFFC.setChecked(false);
+                displayCamera.flashItem.setChecked(true);
+            }
+        });
 
         return(results);
     }
