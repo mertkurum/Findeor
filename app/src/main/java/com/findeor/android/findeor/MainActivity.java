@@ -10,8 +10,7 @@ import android.view.WindowManager;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 
-public class MainActivity  extends BaseSampleActivity  {
-
+public class MainActivity  extends BaseFragmentsActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +18,6 @@ public class MainActivity  extends BaseSampleActivity  {
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
         setContentView(R.layout.simple_underlines);
 
@@ -31,10 +29,7 @@ public class MainActivity  extends BaseSampleActivity  {
         mIndicator = (UnderlinePageIndicator)findViewById(R.id.indicator);
         mIndicator.setViewPager(mPager);
 
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

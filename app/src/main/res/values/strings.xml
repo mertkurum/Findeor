@@ -8,4 +8,6 @@
     <string name="app_id">983242768354091</string>
     <string name="facebook_app_name">Recognize Everyone</string>
     <string name="title_activity_face_login">FaceLoginActivity</string>
+    <string name="title_activity_login_fragment">LoginFragmentActivity</string>
+    <string name="title_activity_base_activity_class">BaseActivityClass</string>
 </resources>

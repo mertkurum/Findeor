@@ -7,7 +7,7 @@ import com.viewpagerindicator.PageIndicator;
 
 import java.util.Random;
 
-public abstract class BaseSampleActivity extends FragmentActivity {
+public abstract class BaseFragmentsActivity extends BaseActivityClass {
     private static final Random RANDOM = new Random();
 
     SwipeFragmentAdapter mAdapter;

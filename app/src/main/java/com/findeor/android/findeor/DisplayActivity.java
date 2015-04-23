@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class DisplayActivity extends Activity {
+public class DisplayActivity extends BaseActivityClass {
   static byte[] imageToShow=null;
 
   @Override

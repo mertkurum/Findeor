@@ -37,11 +37,11 @@
             android:name=".MainActivity"
             android:label="@string/app_name" >
         </activity>
-
-        <activity android:name="com.facebook.FacebookActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -50,6 +50,10 @@
             android:name="com.facebook.sdk.ApplicationName"
             android:value="@string/facebook_app_name" />
 
+        <activity
+            android:name=".BaseActivityClass"
+            android:label="@string/title_activity_base_activity_class" >
+        </activity>
     </application>
 
 </manifest>

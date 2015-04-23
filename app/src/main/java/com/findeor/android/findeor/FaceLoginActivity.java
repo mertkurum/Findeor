@@ -1,13 +1,9 @@
 package com.findeor.android.findeor;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.media.tv.TvInputService;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Entity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,24 +18,34 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import Classes.RegisterRequestModel;
+import ServiceCalls.CallServicesBase;
+import ServiceCalls.LoginCall;
 
 
-public class FaceLoginActivity extends FragmentActivity {
-
-
+public class FaceLoginActivity extends BaseActivityClass {
     private CallbackManager callbackManager;
-    private LoginButton loginButton;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
-
+        serviceManager = new LoginCall("Account");
         callbackManager = CallbackManager.Factory.create();
-
         // Other app specific specialization
         /* TO GET HASH KEY OF APPLICATION
         try {
@@ -54,68 +60,71 @@ public class FaceLoginActivity extends FragmentActivity {
         } catch (PackageManager.NameNotFoundException e) {
         } catch (NoSuchAlgorithmException e) {
         }*/
-
-        // Callback registration
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Context context = getApplicationContext();
-                        CharSequence text = loginResult.getAccessToken().getToken().toString();
-                        int duration = Toast.LENGTH_SHORT;
 
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
+                        RegisterRequestModel requestModel = new RegisterRequestModel();
+                        requestModel.setMobileId("mert");
+                        requestModel.setEmail("mertcan5.kuru3m@hotmail.com");
+                        requestModel.setToken(loginResult.getAccessToken().getToken());
+                        requestModel.setProvider("Facebook");
+
+                        ((LoginCall)serviceManager).registerAccessToken(requestModel,new AsyncHttpResponseHandler(){
+                            @Override
+                            public void onStart() {
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                                // called when response HTTP status is "200 OK"
+                                CreateToast("oldu");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                                CreateToast(""+statusCode);
+                            }
+
+                            @Override
+                            public void onRetry(int retryNo) {
+                                // called when request is retried
+                            }
+                        });
                     }
-
-
 
                     @Override
                     public void onCancel() {
-                        Context context = getApplicationContext();
-                        CharSequence text = "error";
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
-                        Context context = getApplicationContext();
-                        CharSequence text = "error";
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
                     }
                 });
 
         setContentView(R.layout.activity_login);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if(accessToken !=null)
-        {
-            Context context = getApplicationContext();
-            CharSequence text = accessToken.getToken().toString();
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
+        AccessToken token = AccessToken.getCurrentAccessToken();
 
         // Call the 'activateApp' method to log an app event for use in analytics and advertising
         // reporting.  Do so in the onResume methods of the primary Activities that an app may be
         // launched into.
         AppEventsLogger.activateApp(this);
     }
-        @Override
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_face_login, menu);
